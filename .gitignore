@@ -1,0 +1,9 @@
+# macOS
+.DS_Store
+
+# Java build output
+out/
+*.class
+
+# Node
+node_modules/

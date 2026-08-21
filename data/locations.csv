@@ -1,0 +1,71 @@
+locationId,name,zone,latitude,longitude
+1,UG Hospital,Health,5.652253,-0.176157
+2,Night Market,Commercial,5.642104, -0.185282
+3,Commonwealth Hall,Residential,5.650965,-0.191269
+4,Pentagon Hostel Block A,Residential,5.657187,-0.181522
+5,Legon Hall,Residential,5.649771,-0.187846
+6,Akuafo Hall,Residential,5.650589,-0.185215
+7,Mensah Sarbah Hall,Residential,5.645631,-0.184767
+8,Volta Hall,Residential,5.652180,-0.189439
+9,JSB (Jean Nelson Aka Hall),Residential,5.635503,-0.187162
+10,K Folson Building,Academic,5.655528,-0.186512
+11,Dr. Hilla Limann Hall,Residential,5.637487,-0.183473
+12,Balme Library,Academic,5.651911,-0.186356
+13,UGCS (Computer Science Dept),Academic,5.651647,-0.185089
+14,Great Hall,Administrative,5.65089,-0.195174
+15,Athletic Oval,Sports,5.648455,-0.187034
+16,UG Main Gate,Entrance,5.642263,-0.199517
+17,Academic Freedom Road,Entrance,5.640710,-0.178362
+18,UG Stadium,Sports,5.638631,-0.180601
+19,Bush Canteen,Commercial,5.648967,-0.182816
+20,School of Engineering,Academic,5.655843,-0.181528
+21,University of Ghana Business School (UGBS),Academic,5.653195,-0.188630
+22,University of Ghana School of Law,Academic,5.658396,-0.183208
+23,Central Cafeteria,Commercial,5.647131,-0.187407
+24,College Of Basic And Applied Sciences,Academic,5.657853,-0.180741
+25,JQB,Academic,5.652422,-0.1813150
+26,Chemistry Dept,Academic,5.652845,-0.184997
+27,Department Of Physics,Academic,5.651731,-0.184561
+28,Department of Mathematics,Academic,5.654008,-0.184479
+29,Department of Economics,Academic,5.651164,-0.187537
+30,Department Of Political Science,Academic,5.654855,-0.186210
+31,New N Block,Academic,5.656155,-0.187577
+32,Department of Statistics,Academic,5.64085,-0.182319
+33,TF Hostel,Residential,5.666634,-0.181729
+34,Bani Hostel,Residential,5.663235,-0.17520
+35,Evandy Hostel,Residential,5.662386,-0.180268
+36,International Students Hostel,Residential,5.640988,-0.183289
+37,Institute of Statistical Social and Economic Research(ISSER),Academic,5.654796,-0.183104
+38,Institute of African Studies,Academic,5.69485,-0.180234
+39,Noguchi Memorial Institute of Medical Research,Health,5.634552,-0.183126
+40,Ghana Fire Service (University of Ghana Station),Emergency,5.648920,-0.180784
+41,Cash Office,Finance,5.650459,-0.193838
+42,UMB,Commercial,5.642626,-0.185296
+43,University Of Ghana Bookshop,Commercial,5.651568,-0.189865
+44,Graduate School,Academic,5.657946,-0.175657
+45,Public Affairs Directorate,Academic,5.652345,-0.193149
+46,Valco Trust Hostel Phase 2,Residential,5.644369,-0.186287
+47,Computer Science Department,Academic,5.654740,-0.183350
+48,University Of Ghana Medical Centre,Health,5.637126,-0.177952
+49,Ghana Post,Administrative,5.651005,-0.187286
+50,Administration block,Administrative,5.663336,-0.181025
+51,Pentagon Hostel Block B,Residential,5.658828,-0.181512
+52,Pentagon Hostel Block C,Residential,5.658682,-0.180431
+53,Valco Trust Hostel Phase 1,Residential,5.644797,-0.186570
+54,Department Of Political Science,Academic,5.65515,-0.188064
+55,Department of Geography and Resource Development,Academic,5.651142,-0.182499
+56,College Of Basic And Applied Sciences,Academic,5.650344,-0.183431
+57,Department Of Psychology,Academic,5.655156,-0.186370
+58,Department Of Psychology,Academic,5.654161,-0.188671
+59,Cedi conference hall,Event,5.65167,-0.187349
+60,Vikings Hostel,Residential,5.644135,-0.185380
+61,Elizabeth Frances Sey Hal,Residential,5.636181,-0.187190
+62,College of Humanities,Academic,5.653876,-0.182434
+63,Limbo Museum,Recreational,5.652392,-0.183067
+64,University of Ghana swimming pool,Recreational,5.629775,-0.181561
+65,Legon Interdenominational Church,Religious,5.655880,-0.189880
+66,K.A.B University of Ghana,Academic,5.653142,-0.182495
+67,Micjean Royal Restaurant,Recreational,5.654171,-0.185666
+68,Mfodwo Complex/ N Block,Academic,5.654648,-0.186989
+69,School of Nursing and Midwifery,Academic,5.653665,-0.189901
+70,School of Pharmacy,Academic,5.654057,-0.188951
