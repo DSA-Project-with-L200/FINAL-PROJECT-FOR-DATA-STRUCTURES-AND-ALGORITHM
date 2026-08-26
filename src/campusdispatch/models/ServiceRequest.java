@@ -53,6 +53,8 @@ public class ServiceRequest implements Comparable<ServiceRequest> {
         } else if ("STUDENT".equalsIgnoreCase(userCategory)) {
             score += 400.0;
         } else if ("STAFF".equalsIgnoreCase(userCategory)) {
+            score += 250.0;
+        } else if ("GUEST".equalsIgnoreCase(userCategory)) {
             score += 100.0;
         }
 

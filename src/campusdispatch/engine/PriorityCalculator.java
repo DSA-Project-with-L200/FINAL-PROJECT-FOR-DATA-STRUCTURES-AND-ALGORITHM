@@ -9,7 +9,8 @@ public class PriorityCalculator {
     public static final int EMERGENCY = 1000;
     public static final int DISABLED = 800;
     public static final int STUDENT = 400;
-    public static final int STAFF = 100;
+    public static final int STAFF = 250;
+    public static final int GUEST = 100;
     public static final int HOSPITAL_BONUS = 200;
     public static final int AGING_RATE = 15;
 
@@ -21,6 +22,7 @@ public class PriorityCalculator {
         else if (category.equals("DISABLED")) priority += DISABLED;
         else if (category.equals("STUDENT")) priority += STUDENT;
         else if (category.equals("STAFF")) priority += STAFF;
+        else if (category.equals("GUEST")) priority += GUEST;
 
         long waitTimeMin = (System.currentTimeMillis() - request.getSubmissionTimestamp()) / 60000;
         priority += (int) (waitTimeMin * AGING_RATE);
