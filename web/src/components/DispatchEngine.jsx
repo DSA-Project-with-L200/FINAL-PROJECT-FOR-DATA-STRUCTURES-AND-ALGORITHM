@@ -154,8 +154,9 @@ export default function DispatchEngine({ onLog }) {
               <select className="form-control" value={category} onChange={(e) => setCategory(e.target.value)}>
                 <option value="EMERGENCY_MEDICAL">Emergency Medical (W=50)</option>
                 <option value="STUDENT_MOBILITY">Student Mobility (W=30)</option>
-                <option value="STAFF_TRANSPORT">Staff Transport (W=20)</option>
-                <option value="EVENT_LOGISTICS">Event Logistics (W=15)</option>
+                <option value="STAFF_TRANSPORT">Staff Transport (W=25)</option>
+                <option value="GUEST_TRANSPORT">Guest Transport (W=15)</option>
+                <option value="EVENT_LOGISTICS">Event Logistics (W=10)</option>
               </select>
             </div>
 

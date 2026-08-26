@@ -11,7 +11,7 @@ A centralized campus mobility and emergency dispatch platform built for the **Un
 The Campus Dispatch system handles five core operations:
 
 1. **Receives service requests** from students, staff, and emergency cases across campus
-2. **Prioritizes requests** using a weighted scoring formula (emergencies first, then disabled students, then regular students, then staff)
+2. **Prioritizes requests** using a weighted scoring formula (emergencies first, then disabled individuals, then regular students, then staff, then campus guests)
 3. **Dispatches verified campus taxis** to pickup locations using shortest-path routing
 4. **Manages the campus road network** as a graph to find routes, check connectivity, and detect congestion
 5. **Benchmarks algorithm performance** across varying input sizes for empirical analysis
@@ -164,9 +164,10 @@ P(Ri) = (UserCategoryWeight × W_cat) + (MedicalUrgency × W_urg)
 | Tier | Category | Base Score | Behavior |
 |------|----------|-----------|----------|
 | 1A | Emergency / Ill Student | 1000 pts | Immediate preemption |
-| 1B | Disabled Student | 800 pts | Queue jump ahead of standard |
+| 1B | Disabled Student / Staff | 800 pts | Queue jump ahead of standard |
 | 2 | Standard UG Student | 400 pts | FIFO within tier |
-| 3 | University Staff | 100 pts | Processed when tiers 1-2 clear |
+| 3 | University Staff | 250 pts | Priority over guests, under students |
+| 4 | Campus Guest | 100 pts | Processed after staff & students |
 
 **Modifiers:**
 - Hospital destination bonus: **+200 pts**

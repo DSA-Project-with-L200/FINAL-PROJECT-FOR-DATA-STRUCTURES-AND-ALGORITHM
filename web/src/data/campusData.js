@@ -83,8 +83,9 @@ export function calculatePriorityScore(category, urgencyLevel, waitTimeMinutes, 
   let baseWeight = 20;
   if (category === 'EMERGENCY_MEDICAL') { catWeight = 50; baseWeight = 100; }
   else if (category === 'STUDENT_MOBILITY') { catWeight = 30; baseWeight = 60; }
-  else if (category === 'STAFF_TRANSPORT') { catWeight = 20; baseWeight = 40; }
-  else if (category === 'EVENT_LOGISTICS') { catWeight = 15; baseWeight = 30; }
+  else if (category === 'STAFF_TRANSPORT') { catWeight = 25; baseWeight = 50; }
+  else if (category === 'GUEST_TRANSPORT') { catWeight = 15; baseWeight = 30; }
+  else if (category === 'EVENT_LOGISTICS') { catWeight = 10; baseWeight = 20; }
 
   const urgencyVal = urgencyLevel === 'CRITICAL' ? 300 : (urgencyLevel === 'HIGH' ? 200 : (urgencyLevel === 'MEDIUM' ? 100 : 20));
   const hospitalBonus = (destLocationId === 1) ? 250 : 0;
@@ -94,7 +95,7 @@ export function calculatePriorityScore(category, urgencyLevel, waitTimeMinutes, 
 }
 
 export function generateInitialRequests() {
-  const categories = ['EMERGENCY_MEDICAL', 'STUDENT_MOBILITY', 'STAFF_TRANSPORT', 'EVENT_LOGISTICS'];
+  const categories = ['EMERGENCY_MEDICAL', 'STUDENT_MOBILITY', 'STAFF_TRANSPORT', 'GUEST_TRANSPORT', 'EVENT_LOGISTICS'];
   const urgencies = ['CRITICAL', 'HIGH', 'MEDIUM', 'LOW'];
   const requests = [];
 
