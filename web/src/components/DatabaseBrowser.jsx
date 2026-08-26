@@ -1,35 +1,111 @@
 import React, { useState } from 'react';
-import { CAMPUS_LOCATIONS, RAW_ROADS } from '../data/campusData';
-import { Database, Table, Search, Download, FileText, Server } from 'lucide-react';
+import { CAMPUS_LOCATIONS, RAW_ROADS, INITIAL_DRIVERS, REALISTIC_REQUESTERS } from '../data/campusData';
+import { Database, Table, Search, Download, FileText } from 'lucide-react';
 
 export default function DatabaseBrowser() {
-  const [selectedTable, setSelectedTable] = useState('locations');
+  const [selectedTable, setSelectedTable] = useState('users');
   const [searchQuery, setSearchQuery] = useState('');
 
   // Sample seed datasets mirroring SQLite DB tables
-  const sampleRequests = [
-    { requestId: 1, requesterName: "Kofi Mensah", userCategory: "STUDENT", pickupLocationId: 4, destinationLocationId: 1, status: "PENDING", waitTimeMinutes: 12, isMedicalUrgency: 0 },
-    { requestId: 2, requesterName: "Ama Serwaa", userCategory: "STAFF", pickupLocationId: 5, destinationLocationId: 23, status: "PENDING", waitTimeMinutes: 5, isMedicalUrgency: 0 },
-    { requestId: 3, requesterName: "Kwesi Appiah", userCategory: "EMERGENCY", pickupLocationId: 3, destinationLocationId: 1, status: "DISPATCHED", waitTimeMinutes: 2, isMedicalUrgency: 1 },
-    { requestId: 4, requesterName: "Abena Osei", userCategory: "DISABLED", pickupLocationId: 10, destinationLocationId: 12, status: "PENDING", waitTimeMinutes: 18, isMedicalUrgency: 0 },
-    { requestId: 5, requesterName: "Yaw Dabo", userCategory: "STUDENT", pickupLocationId: 2, destinationLocationId: 14, status: "PENDING", waitTimeMinutes: 25, isMedicalUrgency: 0 },
-    { requestId: 6, requesterName: "Esi Badu", userCategory: "EMERGENCY", pickupLocationId: 8, destinationLocationId: 1, status: "DISPATCHED", waitTimeMinutes: 1, isMedicalUrgency: 1 },
-    { requestId: 7, requesterName: "Kwame Kyei", userCategory: "STAFF", pickupLocationId: 50, destinationLocationId: 37, status: "PENDING", waitTimeMinutes: 8, isMedicalUrgency: 0 },
+  const sampleUsers = [
+    { userId: 1, fullName: "Kofi Mensah", userType: "STUDENT", email: "kofi.mensah@st.ug.edu.gh", phone: "+233 24 100 2001", homeLocationId: 4, hasDisability: 0 },
+    { userId: 2, fullName: "Ama Asante", userType: "STUDENT", email: "ama.asante@st.ug.edu.gh", phone: "+233 20 100 2002", homeLocationId: 8, hasDisability: 1 },
+    { userId: 3, fullName: "Kwame Appiah", userType: "STUDENT", email: "kwame.appiah@st.ug.edu.gh", phone: "+233 27 100 2003", homeLocationId: 5, hasDisability: 0 },
+    { userId: 4, fullName: "Dr. Abena Osei", userType: "FACULTY", email: "abena.osei@ug.edu.gh", phone: "+233 54 100 2004", homeLocationId: 3, hasDisability: 0 },
+    { userId: 5, fullName: "Prof. Ernest Aryeetey", userType: "FACULTY", email: "e.aryeetey@ug.edu.gh", phone: "+233 26 100 2005", homeLocationId: 6, hasDisability: 0 },
+    { userId: 6, fullName: "Esi Boateng", userType: "STAFF", email: "esi.boateng@ug.edu.gh", phone: "+233 24 100 2006", homeLocationId: 7, hasDisability: 0 },
+    { userId: 13, fullName: "Chief Inspector John Mensah", userType: "GUEST", email: "j.mensah@police.gov.gh", phone: "+233 24 888 9911", homeLocationId: 16, hasDisability: 0 },
+    { userId: 14, fullName: "Dr. Mary Hopkins", userType: "GUEST", email: "m.hopkins@oxford.ac.uk", phone: "+233 55 222 3344", homeLocationId: 14, hasDisability: 0 },
+    { userId: 16, fullName: "Driver Kweku Mensah", userType: "DRIVER", email: "kweku.driver@ugdispatch.gh", phone: "+233 24 123 4567", homeLocationId: 4, hasDisability: 0 },
+    { userId: 17, fullName: "Driver Emmanuel Ofori", userType: "DRIVER", email: "emmanuel.driver@ugdispatch.gh", phone: "+233 20 987 6543", homeLocationId: 12, hasDisability: 0 },
   ];
 
-  const sampleResources = [
-    { resourceId: 1, driverName: "Kofi Mensah", vehiclePlate: "GR-1234-21", type: "CAMPUS_TAXI", homeLocationId: 3, capacity: 4, availabilityStatus: "AVAILABLE" },
-    { resourceId: 2, driverName: "Kwame Asante", vehiclePlate: "GW-5678-22", type: "EMERGENCY_VAN", homeLocationId: 1, capacity: 6, availabilityStatus: "AVAILABLE" },
-    { resourceId: 3, driverName: "Yaw Addo", vehiclePlate: "GS-9012-23", type: "CAMPUS_TAXI", homeLocationId: 2, capacity: 4, availabilityStatus: "DISPATCHED" },
-    { resourceId: 4, driverName: "Akosua Prempeh", vehiclePlate: "GT-3456-24", type: "CAMPUS_TAXI", homeLocationId: 4, capacity: 4, availabilityStatus: "AVAILABLE" },
+  const sampleStudents = [
+    { studentId: 1, userId: 1, indexNumber: "10982341", hallOfResidence: "Pentagon Hostel", department: "Computer Science", academicYear: "Level 300" },
+    { studentId: 2, userId: 2, indexNumber: "10982342", hallOfResidence: "Volta Hall", department: "Chemistry", academicYear: "Level 200" },
+    { studentId: 3, userId: 3, indexNumber: "10982343", hallOfResidence: "Legon Hall", department: "Law", academicYear: "Level 400" },
+    { studentId: 4, userId: 7, indexNumber: "10982347", hallOfResidence: "Diaspora Hall", department: "Political Science", academicYear: "Level 100" },
+    { studentId: 5, userId: 8, indexNumber: "10982348", hallOfResidence: "Hilla Limann Hall", department: "UGBS", academicYear: "Level 300" },
   ];
 
-  const sampleAuditEvents = [
-    { eventId: 1, eventType: "DB_INIT", description: "Database schema initialized and baseline datasets loaded.", timestamp: "2026-08-12 12:00:00", relatedRequestId: null },
-    { eventId: 2, eventType: "DISPATCH", description: "Dispatched Emergency Van GW-5678-22 to Request #3.", timestamp: "2026-08-12 12:05:30", relatedRequestId: 3 },
+  const sampleGuests = [
+    { guestId: 1, userId: 13, passCode: "GST-9081", visitingDepartment: "UG Fire Station & Security", hostPersonName: "UG Chief Security Officer", durationDays: 2 },
+    { guestId: 2, userId: 14, passCode: "GST-9082", visitingDepartment: "Institute of African Studies", hostPersonName: "Prof. Ernest Aryeetey", durationDays: 5 },
+    { guestId: 3, userId: 15, passCode: "GST-9083", visitingDepartment: "Main Administration", hostPersonName: "Esi Boateng", durationDays: 1 },
   ];
+
+  const sampleDrivers = INITIAL_DRIVERS.map((d, i) => ({
+    driverId: i + 1,
+    userId: 16 + i,
+    fullName: d.name,
+    licenseNumber: `DL-2022-${100 + i}`,
+    vehiclePlate: `GR-${1000 + i * 111}-22`,
+    vehicleType: d.type,
+    capacity: d.type === 'SHUTTLE' ? 18 : d.type === 'ACCESSIBLE_VAN' ? 6 : 4,
+    homeLocationId: d.locationId,
+    availabilityStatus: d.status,
+    isWheelchairAccessible: d.isWheelchairAccessible ? 1 : 0,
+    contactPhone: d.phone,
+    rating: 4.9
+  }));
+
+  const sampleRequests = REALISTIC_REQUESTERS.map((r, i) => ({
+    requestId: 1001 + i,
+    userId: i + 1,
+    requesterName: r.name,
+    userCategory: r.category,
+    pickupLocationId: (i * 4 + 3) % 50 + 1,
+    destinationLocationId: r.category === 'EMERGENCY_MEDICAL' ? 1 : ((i * 7 + 12) % 50 + 1),
+    status: i % 2 === 0 ? "PENDING" : "DISPATCHED",
+    waitTimeMinutes: (i * 6 + 5) % 40 + 5,
+    isMedicalUrgency: r.category === 'EMERGENCY_MEDICAL' ? 1 : 0
+  }));
 
   const schemas = {
+    users: `CREATE TABLE users (
+  userId INTEGER PRIMARY KEY,
+  fullName TEXT NOT NULL,
+  userType TEXT NOT NULL, -- 'STUDENT', 'GUEST', 'FACULTY', 'STAFF', 'DRIVER'
+  email TEXT,
+  phone TEXT,
+  homeLocationId INTEGER,
+  hasDisability INTEGER DEFAULT 0,
+  FOREIGN KEY(homeLocationId) REFERENCES locations(locationId)
+);`,
+    students: `CREATE TABLE students (
+  studentId INTEGER PRIMARY KEY AUTOINCREMENT,
+  userId INTEGER NOT NULL UNIQUE,
+  indexNumber TEXT UNIQUE NOT NULL,
+  hallOfResidence TEXT NOT NULL,
+  department TEXT NOT NULL,
+  academicYear TEXT DEFAULT 'Level 300',
+  FOREIGN KEY(userId) REFERENCES users(userId) ON DELETE CASCADE
+);`,
+    guests: `CREATE TABLE guests (
+  guestId INTEGER PRIMARY KEY AUTOINCREMENT,
+  userId INTEGER NOT NULL UNIQUE,
+  passCode TEXT UNIQUE NOT NULL,
+  visitingDepartment TEXT NOT NULL,
+  hostPersonName TEXT,
+  durationDays INTEGER DEFAULT 1,
+  FOREIGN KEY(userId) REFERENCES users(userId) ON DELETE CASCADE
+);`,
+    drivers: `CREATE TABLE drivers (
+  driverId INTEGER PRIMARY KEY AUTOINCREMENT,
+  userId INTEGER UNIQUE,
+  fullName TEXT NOT NULL,
+  licenseNumber TEXT UNIQUE NOT NULL,
+  vehiclePlate TEXT NOT NULL,
+  vehicleType TEXT NOT NULL,
+  capacity INTEGER NOT NULL,
+  homeLocationId INTEGER,
+  availabilityStatus TEXT NOT NULL,
+  isWheelchairAccessible INTEGER DEFAULT 0,
+  contactPhone TEXT,
+  rating REAL DEFAULT 4.9,
+  FOREIGN KEY(userId) REFERENCES users(userId),
+  FOREIGN KEY(homeLocationId) REFERENCES locations(locationId)
+);`,
     locations: `CREATE TABLE locations (
   locationId INTEGER PRIMARY KEY,
   name TEXT NOT NULL,
@@ -49,39 +125,27 @@ export default function DatabaseBrowser() {
 );`,
     service_requests: `CREATE TABLE service_requests (
   requestId INTEGER PRIMARY KEY,
+  userId INTEGER,
   requesterName TEXT,
   userCategory TEXT,
   pickupLocationId INTEGER,
   destinationLocationId INTEGER,
   status TEXT,
   waitTimeMinutes REAL,
-  isMedicalUrgency INTEGER
-);`,
-    resources: `CREATE TABLE resources (
-  resourceId INTEGER PRIMARY KEY,
-  driverName TEXT,
-  vehiclePlate TEXT,
-  type TEXT,
-  homeLocationId INTEGER,
-  capacity INTEGER,
-  availabilityStatus TEXT
-);`,
-    audit_events: `CREATE TABLE audit_events (
-  eventId INTEGER PRIMARY KEY AUTOINCREMENT,
-  eventType TEXT,
-  description TEXT,
-  timestamp TEXT,
-  relatedRequestId INTEGER
+  isMedicalUrgency INTEGER,
+  FOREIGN KEY(userId) REFERENCES users(userId)
 );`
   };
 
   // Get current table data
   let data = [];
-  if (selectedTable === 'locations') data = CAMPUS_LOCATIONS;
+  if (selectedTable === 'users') data = sampleUsers;
+  else if (selectedTable === 'students') data = sampleStudents;
+  else if (selectedTable === 'guests') data = sampleGuests;
+  else if (selectedTable === 'drivers') data = sampleDrivers;
+  else if (selectedTable === 'locations') data = CAMPUS_LOCATIONS;
   else if (selectedTable === 'roads') data = RAW_ROADS.map(([id, u, v, dist, cong]) => ({ roadId: id, sourceLocationId: u, destLocationId: v, distanceMeters: dist, congestionFactor: cong, isBidirectional: 1 }));
   else if (selectedTable === 'service_requests') data = sampleRequests;
-  else if (selectedTable === 'resources') data = sampleResources;
-  else if (selectedTable === 'audit_events') data = sampleAuditEvents;
 
   // Filter rows by search query
   const filteredData = data.filter((row) => {
@@ -120,15 +184,17 @@ export default function DatabaseBrowser() {
             <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 600 }}>TABLE:</span>
             <select
               className="form-control"
-              style={{ width: '200px' }}
+              style={{ width: '220px' }}
               value={selectedTable}
               onChange={(e) => setSelectedTable(e.target.value)}
             >
+              <option value="users">users (Parent Entity Table)</option>
+              <option value="students">students (Subtype Extension)</option>
+              <option value="guests">guests (Subtype Extension)</option>
+              <option value="drivers">drivers (Subtype Extension)</option>
               <option value="locations">locations (50 rows)</option>
               <option value="roads">roads (100 rows)</option>
               <option value="service_requests">service_requests (300 rows)</option>
-              <option value="resources">resources (30 rows)</option>
-              <option value="audit_events">audit_events</option>
             </select>
           </div>
 
@@ -193,11 +259,11 @@ export default function DatabaseBrowser() {
           </pre>
 
           <div style={{ marginTop: '1rem', background: '#f1f5f9', padding: '10px', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
-            <div style={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--text-main)', marginBottom: '4px' }}>⚡ SQLite Connection Info:</div>
-            <div style={{ fontSize: '0.725rem', color: 'var(--text-muted)' }}>
-              Database File: <b>`campus_dispatch.db`</b><br />
-              JDBC Driver: <b>org.sqlite.JDBC</b><br />
-              Location: <b>/Users/Apple/Desktop/DSA final project</b>
+            <div style={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--text-main)', marginBottom: '4px' }}>⚡ Relational Schema Architecture:</div>
+            <div style={{ fontSize: '0.725rem', color: 'var(--text-muted)', lineHeight: '1.5' }}>
+              Parent: <b>`users`</b> (userId PK)<br />
+              Subtypes: <b>`students`</b>, <b>`guests`</b>, <b>`drivers`</b> (FK ➔ `users.userId`)<br />
+              Database: <b>`campus_dispatch.db`</b>
             </div>
           </div>
         </div>

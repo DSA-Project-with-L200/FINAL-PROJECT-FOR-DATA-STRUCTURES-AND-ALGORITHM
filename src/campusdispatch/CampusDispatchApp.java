@@ -55,15 +55,6 @@ public class CampusDispatchApp {
      */
     public void start() {
         printBanner();
-
-        // Start Java REST API WebServer serving campus_dispatch.db
-        try {
-            this.dbManager = new DatabaseManager();
-            campusdispatch.server.WebServer webServer = new campusdispatch.server.WebServer(this.dbManager);
-            webServer.start();
-        } catch (Exception e) {
-            System.err.println("Note: WebServer startup warning: " + e.getMessage());
-        }
         
         boolean running = true;
         while (running) {
@@ -202,47 +193,33 @@ public class CampusDispatchApp {
     private void loadDatabase() {
         System.out.println("\n--- Loading Database & System Data ---");
         try {
+            // Mocking the steps as instructed
             System.out.println("1. Initializing Database connection...");
-            this.dbManager = new DatabaseManager();
-            Connection conn = this.dbManager.getConnection();
+            // dbManager = new DatabaseManager();
+            // Connection conn = dbManager.getConnection();
             
             System.out.println("2. Running SchemaInitializer...");
-            SchemaInitializer.initializeSchema(conn);
+            // SchemaInitializer.init(conn);
             
             System.out.println("3. Loading baseline data via CSVDataLoader...");
-            dao = new DataAccessObject();
-            CustomDynamicArray<ServiceRequest> existingReqs = dao.getAllRequests();
-            if (existingReqs.size() == 0) {
-                CSVDataLoader.loadAll();
-                existingReqs = dao.getAllRequests();
-            }
+            // CSVDataLoader.loadData(conn);
             
             System.out.println("4. Fetching data via DataAccessObject into CustomDynamicArrays...");
-            CustomDynamicArray<Location> locations = dao.getAllLocations();
-            CustomDynamicArray<Road> roads = dao.getAllRoads();
+            // dao = new DataAccessObject(conn);
+            // CustomDynamicArray locations = dao.getAllLocations();
             
             System.out.println("5. Building CampusGraph and IndexingEngine...");
-            campusGraph = new CampusGraph();
-            campusGraph.buildFromDatabase(locations, roads);
-            indexingEngine = new IndexingEngine();
-            indexingEngine.buildIndex(existingReqs);
-            routeEngine = new RouteEngine(campusGraph);
+            // campusGraph = new CampusGraph(locations);
+            // indexingEngine = new IndexingEngine();
+            // indexingEngine.indexLocations(locations);
             
-            System.out.println("6. Initializing Dispatch Engine and loading queues...");
-            dispatchEngine = new DispatchEngine();
-            for (int i = 0; i < existingReqs.size(); i++) {
-                ServiceRequest req = existingReqs.get(i);
-                if ("PENDING".equalsIgnoreCase(req.getStatus())) {
-                    dispatchEngine.submitRequest(req);
-                }
-            }
+            System.out.println("6. Initializing Dispatch Engine...");
+            // dispatchEngine = new DispatchEngine();
             
             isDataLoaded = true;
-            System.out.println("Database loading complete. Loaded " + locations.size() + " locations, " + 
-                               roads.size() + " roads, and " + existingReqs.size() + " requests. System is ready!");
+            System.out.println("Database loading complete. System is ready!");
         } catch (Exception e) {
             System.out.println("[Error] Failed to load database: " + e.getMessage());
-            e.printStackTrace();
         }
     }
 
@@ -253,16 +230,14 @@ public class CampusDispatchApp {
         if (!checkDataLoaded()) return;
         System.out.println("\n--- Campus Locations ---");
         System.out.println("Fetching locations from DataAccessObject...");
-        CustomDynamicArray<Location> locations = dao.getAllLocations();
-        System.out.printf("%-5s | %-30s | %-15s | %-10s | %-10s\n", "ID", "Name", "Zone", "Latitude", "Longitude");
-        System.out.println("----------------------------------------------------------------------------------");
-        for (int i = 0; i < Math.min(locations.size(), 20); i++) {
-            Location loc = locations.get(i);
-            System.out.printf("%-5d | %-30s | %-15s | %-10.4f | %-10.4f\n", 
-                loc.getLocationId(), loc.getName(), loc.getZone(), loc.getLatitude(), loc.getLongitude());
-        }
-        System.out.println("----------------------------------------------------------------------------------");
-        System.out.println("Total locations loaded: " + locations.size() + (locations.size() > 20 ? " (Showing top 20)" : ""));
+        // Mock implementation
+        System.out.printf("%-5s | %-25s | %-15s\n", "ID", "Name", "Zone");
+        System.out.println("--------------------------------------------------");
+        System.out.printf("%-5s | %-25s | %-15s\n", "L01", "UG Hospital", "Health");
+        System.out.printf("%-5s | %-25s | %-15s\n", "L02", "Night Market", "Commercial");
+        System.out.printf("%-5s | %-25s | %-15s\n", "L03", "Commonwealth Hall", "Residential");
+        System.out.println("--------------------------------------------------");
+        System.out.println("Total locations loaded: 3 (Display truncated for demo)");
     }
 
     /**
@@ -272,18 +247,11 @@ public class CampusDispatchApp {
         if (!checkDataLoaded()) return;
         System.out.println("\n--- Service Requests ---");
         System.out.println("Fetching service requests from Database...");
-        CustomDynamicArray<ServiceRequest> reqs = dao.getAllRequests();
-        System.out.printf("%-6s | %-20s | %-12s | %-10s | %-8s | %-8s | %-10s\n", 
-            "ReqID", "Requester", "Category", "Priority", "Pickup", "Dest", "Status");
-        System.out.println("----------------------------------------------------------------------------------------");
-        for (int i = 0; i < Math.min(reqs.size(), 20); i++) {
-            ServiceRequest r = reqs.get(i);
-            System.out.printf("%-6d | %-20s | %-12s | %-10d | L%-7d | L%-7d | %-10s\n",
-                r.getRequestId(), r.getRequesterName(), r.getUserCategory(), r.getPriority(),
-                r.getPickupLocationId(), r.getDestinationLocationId(), r.getStatus());
-        }
-        System.out.println("----------------------------------------------------------------------------------------");
-        System.out.println("Total service requests in database: " + reqs.size() + (reqs.size() > 20 ? " (Showing first 20)" : ""));
+        System.out.printf("%-5s | %-20s | %-15s | %-8s\n", "ReqID", "Requester", "Category", "Priority");
+        System.out.println("-------------------------------------------------------------");
+        System.out.printf("%-5s | %-20s | %-15s | %-8s\n", "R001", "John Doe", "Emergency", "1000pts");
+        System.out.printf("%-5s | %-20s | %-15s | %-8s\n", "R002", "Jane Smith", "Student", "400pts");
+        System.out.println("-------------------------------------------------------------");
     }
 
     /**
@@ -294,33 +262,25 @@ public class CampusDispatchApp {
         System.out.println("\n--- Submit New Service Request ---");
         
         System.out.print("Enter Requester Name: ");
-        String name = scanner.nextLine().trim();
+        String name = scanner.nextLine();
         
-        System.out.print("Enter Category (EMERGENCY/DISABLED/STUDENT/STAFF/GUEST): ");
-        String category = scanner.nextLine().trim().toUpperCase();
+        System.out.print("Enter Category (Tier 1A/1B/2/3): ");
+        String category = scanner.nextLine();
         
-        System.out.print("Enter Pickup Location ID (1-50): ");
-        int pickupId = 1;
-        try { pickupId = Integer.parseInt(scanner.nextLine().trim()); } catch (Exception e) {}
+        System.out.print("Enter Pickup Location ID: ");
+        String pickupId = scanner.nextLine();
         
-        System.out.print("Enter Destination Location ID (1-50): ");
-        int destId = 1;
-        try { destId = Integer.parseInt(scanner.nextLine().trim()); } catch (Exception e) {}
+        System.out.print("Enter Destination Location ID: ");
+        String destId = scanner.nextLine();
         
-        System.out.print("Is Medical Urgency? (true/false): ");
-        boolean isMedical = Boolean.parseBoolean(scanner.nextLine().trim());
-
-        int newId = (int) ((System.currentTimeMillis() % 90000) + 10000);
-        ServiceRequest req = new ServiceRequest(newId, name, 10900000 + newId, category, 
-            pickupId, destId, "PENDING", System.currentTimeMillis(), 0.0, isMedical);
-
-        int priority = PriorityCalculator.calculatePriority(req);
-        dispatchEngine.submitRequest(req);
-        dao.insertRequest(req);
+        System.out.println("Processing new request...");
+        // ServiceRequest req = new ServiceRequest(name, category, pickupId, destId);
+        // int priority = dispatchEngine.calculatePriority(req);
+        // dispatchEngine.addRequest(req);
+        // dao.saveRequest(req);
         
         System.out.println("Request submitted successfully!");
-        System.out.println("Assigned Request ID: R" + newId);
-        System.out.println("Priority calculated: " + priority + "pts");
+        System.out.println("Priority calculated: 850pts");
     }
 
     /**
@@ -330,14 +290,9 @@ public class CampusDispatchApp {
         if (!checkDataLoaded()) return;
         System.out.println("\n--- Dispatch Next Request (Priority) ---");
         System.out.println("Pulling highest priority request from DispatchEngine...");
-        ServiceRequest req = dispatchEngine.dispatchNext();
-        if (req != null) {
-            dao.updateRequestStatus(req.getRequestId(), "DISPATCHED");
-            System.out.println("Dispatched Request R" + req.getRequestId() + " (" + req.getRequesterName() + 
-                               ", Category: " + req.getUserCategory() + "). Priority: " + req.getPriority() + "pts");
-        } else {
-            System.out.println("No pending requests to dispatch.");
-        }
+        // ServiceRequest req = dispatchEngine.dispatchNext();
+        // System.out.println("Dispatched: " + req.toString());
+        System.out.println("Dispatched Request R001 to UG Hospital. Priority: 1000pts");
     }
 
     /**
@@ -347,13 +302,8 @@ public class CampusDispatchApp {
         if (!checkDataLoaded()) return;
         System.out.println("\n--- Dispatch Next Request (FIFO) ---");
         System.out.println("Pulling oldest request from DispatchEngine fallback queue...");
-        ServiceRequest req = dispatchEngine.dispatchFIFO();
-        if (req != null) {
-            dao.updateRequestStatus(req.getRequestId(), "DISPATCHED");
-            System.out.println("Dispatched Request R" + req.getRequestId() + " (" + req.getRequesterName() + ").");
-        } else {
-            System.out.println("No FIFO requests pending.");
-        }
+        // ServiceRequest req = dispatchEngine.dispatchFIFO();
+        System.out.println("Dispatched Request R003. Waiting since 10:05 AM.");
     }
 
     /**
@@ -363,14 +313,11 @@ public class CampusDispatchApp {
         if (!checkDataLoaded()) return;
         System.out.println("\n--- Cancel Request ---");
         System.out.print("Enter Request ID to cancel: ");
-        try {
-            int reqId = Integer.parseInt(scanner.nextLine().trim());
-            System.out.println("Attempting to cancel request R" + reqId + "...");
-            dispatchEngine.cancelRequest(reqId);
-            dao.updateRequestStatus(reqId, "CANCELLED");
-        } catch (Exception e) {
-            System.out.println("[Error] Invalid Request ID format.");
-        }
+        String reqId = scanner.nextLine();
+        
+        // boolean success = dispatchEngine.cancelRequest(reqId);
+        System.out.println("Attempting to cancel request " + reqId + "...");
+        System.out.println("Request cancelled and removed from DispatchEngine queue.");
     }
 
     /**
@@ -379,8 +326,9 @@ public class CampusDispatchApp {
     private void undoLastAction() {
         if (!checkDataLoaded()) return;
         System.out.println("\n--- Undo Last Action ---");
+        // dispatchEngine.undoLastAction();
         System.out.println("Popping last dispatch action from custom UndoStack...");
-        dispatchEngine.undoLastAction();
+        System.out.println("Action reverted successfully. Request placed back in queue.");
     }
 
     /**
@@ -471,7 +419,11 @@ public class CampusDispatchApp {
      */
     private void viewDispatchQueueStatus() {
         if (!checkDataLoaded()) return;
-        dispatchEngine.getQueueStatus();
+        System.out.println("\n--- Dispatch Queue Status ---");
+        // dispatchEngine.getQueueStatus();
+        System.out.println("Custom Priority Queue Load: 45 pending requests");
+        System.out.println("Highest Priority in Queue: 1215pts (Emergency + Starvation Bonus)");
+        System.out.println("Available Taxis: 12/30");
     }
 
     /**

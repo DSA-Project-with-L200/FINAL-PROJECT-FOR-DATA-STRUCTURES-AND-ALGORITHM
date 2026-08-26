@@ -10,6 +10,7 @@ import TraceLogger from './components/TraceLogger';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('map');
+  const [activeSimRequest, setActiveSimRequest] = useState(null);
   const [logs, setLogs] = useState([
     { time: new Date().toLocaleTimeString(), tag: 'INIT', message: 'Loaded 50 University of Ghana campus locations & 100 road edges.' }
   ]);
@@ -23,13 +24,22 @@ export default function App() {
     setLogs((prev) => [newLog, ...prev.slice(0, 49)]);
   };
 
+  const handleLaunchSimulation = (request) => {
+    setActiveSimRequest(request);
+    setActiveTab('map');
+  };
+
   return (
     <div className="app-container">
       <Navbar activeTab={activeTab} setActiveTab={setActiveTab} />
 
       <main className="main-layout" style={{ display: 'block', padding: '1.5rem 2rem' }}>
-        {activeTab === 'map' && <CampusMap onLog={addLog} />}
-        {activeTab === 'dispatch' && <DispatchEngine onLog={addLog} />}
+        {activeTab === 'map' && (
+          <CampusMap onLog={addLog} activeSimulationRequest={activeSimRequest} />
+        )}
+        {activeTab === 'dispatch' && (
+          <DispatchEngine onLog={addLog} onLaunchSimulation={handleLaunchSimulation} />
+        )}
         {activeTab === 'ds' && <DataStructuresInspector />}
         {activeTab === 'knapsack' && <KnapsackOptimizer />}
         {activeTab === 'benchmarks' && <BenchmarkRunner onLog={addLog} />}

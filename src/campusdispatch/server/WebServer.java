@@ -36,6 +36,10 @@ public class WebServer {
             server.createContext("/api/status", new StatusHandler());
             server.createContext("/api/locations", new LocationsHandler());
             server.createContext("/api/roads", new RoadsHandler());
+            server.createContext("/api/users", new UsersHandler());
+            server.createContext("/api/students", new StudentsHandler());
+            server.createContext("/api/guests", new GuestsHandler());
+            server.createContext("/api/drivers", new DriversHandler());
             server.createContext("/api/requests", new RequestsHandler());
             server.createContext("/api/resources", new ResourcesHandler());
 
@@ -130,6 +134,135 @@ public class WebServer {
                       .append("\"dest\":").append(rs.getInt("destLocationId")).append(",")
                       .append("\"distance\":").append(rs.getDouble("distanceMeters")).append(",")
                       .append("\"congestion\":").append(rs.getDouble("congestionFactor"))
+                      .append("}");
+                    first = false;
+                }
+            } catch (Exception e) {
+                sendJsonResponse(exchange, 500, "{\"error\":\"" + escapeJson(e.getMessage()) + "\"}");
+                return;
+            }
+            sb.append("]");
+            sendJsonResponse(exchange, 200, sb.toString());
+        }
+    }
+
+    private class UsersHandler implements HttpHandler {
+        @Override
+        public void handle(HttpExchange exchange) throws IOException {
+            StringBuilder sb = new StringBuilder("[");
+            try (Connection conn = dbManager.getConnection();
+                 Statement stmt = conn.createStatement();
+                 ResultSet rs = stmt.executeQuery("SELECT userId, fullName, userType, email, phone, homeLocationId, hasDisability FROM users ORDER BY userId ASC")) {
+                
+                boolean first = true;
+                while (rs.next()) {
+                    if (!first) sb.append(",");
+                    sb.append("{")
+                      .append("\"userId\":").append(rs.getInt("userId")).append(",")
+                      .append("\"fullName\":\"").append(escapeJson(rs.getString("fullName"))).append("\",")
+                      .append("\"userType\":\"").append(escapeJson(rs.getString("userType"))).append("\",")
+                      .append("\"email\":\"").append(escapeJson(rs.getString("email"))).append("\",")
+                      .append("\"phone\":\"").append(escapeJson(rs.getString("phone"))).append("\",")
+                      .append("\"homeLocationId\":").append(rs.getInt("homeLocationId")).append(",")
+                      .append("\"hasDisability\":").append(rs.getInt("hasDisability") == 1)
+                      .append("}");
+                    first = false;
+                }
+            } catch (Exception e) {
+                sendJsonResponse(exchange, 500, "{\"error\":\"" + escapeJson(e.getMessage()) + "\"}");
+                return;
+            }
+            sb.append("]");
+            sendJsonResponse(exchange, 200, sb.toString());
+        }
+    }
+
+    private class StudentsHandler implements HttpHandler {
+        @Override
+        public void handle(HttpExchange exchange) throws IOException {
+            StringBuilder sb = new StringBuilder("[");
+            try (Connection conn = dbManager.getConnection();
+                 Statement stmt = conn.createStatement();
+                 ResultSet rs = stmt.executeQuery("SELECT s.studentId, s.userId, u.fullName, s.indexNumber, s.hallOfResidence, s.department, s.academicYear FROM students s JOIN users u ON s.userId = u.userId ORDER BY s.studentId ASC")) {
+                
+                boolean first = true;
+                while (rs.next()) {
+                    if (!first) sb.append(",");
+                    sb.append("{")
+                      .append("\"studentId\":").append(rs.getInt("studentId")).append(",")
+                      .append("\"userId\":").append(rs.getInt("userId")).append(",")
+                      .append("\"fullName\":\"").append(escapeJson(rs.getString("fullName"))).append("\",")
+                      .append("\"indexNumber\":\"").append(escapeJson(rs.getString("indexNumber"))).append("\",")
+                      .append("\"hallOfResidence\":\"").append(escapeJson(rs.getString("hallOfResidence"))).append("\",")
+                      .append("\"department\":\"").append(escapeJson(rs.getString("department"))).append("\",")
+                      .append("\"academicYear\":\"").append(escapeJson(rs.getString("academicYear"))).append("\"")
+                      .append("}");
+                    first = false;
+                }
+            } catch (Exception e) {
+                sendJsonResponse(exchange, 500, "{\"error\":\"" + escapeJson(e.getMessage()) + "\"}");
+                return;
+            }
+            sb.append("]");
+            sendJsonResponse(exchange, 200, sb.toString());
+        }
+    }
+
+    private class GuestsHandler implements HttpHandler {
+        @Override
+        public void handle(HttpExchange exchange) throws IOException {
+            StringBuilder sb = new StringBuilder("[");
+            try (Connection conn = dbManager.getConnection();
+                 Statement stmt = conn.createStatement();
+                 ResultSet rs = stmt.executeQuery("SELECT g.guestId, g.userId, u.fullName, g.passCode, g.visitingDepartment, g.hostPersonName, g.durationDays FROM guests g JOIN users u ON g.userId = u.userId ORDER BY g.guestId ASC")) {
+                
+                boolean first = true;
+                while (rs.next()) {
+                    if (!first) sb.append(",");
+                    sb.append("{")
+                      .append("\"guestId\":").append(rs.getInt("guestId")).append(",")
+                      .append("\"userId\":").append(rs.getInt("userId")).append(",")
+                      .append("\"fullName\":\"").append(escapeJson(rs.getString("fullName"))).append("\",")
+                      .append("\"passCode\":\"").append(escapeJson(rs.getString("passCode"))).append("\",")
+                      .append("\"visitingDepartment\":\"").append(escapeJson(rs.getString("visitingDepartment"))).append("\",")
+                      .append("\"hostPersonName\":\"").append(escapeJson(rs.getString("hostPersonName"))).append("\",")
+                      .append("\"durationDays\":").append(rs.getInt("durationDays"))
+                      .append("}");
+                    first = false;
+                }
+            } catch (Exception e) {
+                sendJsonResponse(exchange, 500, "{\"error\":\"" + escapeJson(e.getMessage()) + "\"}");
+                return;
+            }
+            sb.append("]");
+            sendJsonResponse(exchange, 200, sb.toString());
+        }
+    }
+
+    private class DriversHandler implements HttpHandler {
+        @Override
+        public void handle(HttpExchange exchange) throws IOException {
+            StringBuilder sb = new StringBuilder("[");
+            try (Connection conn = dbManager.getConnection();
+                 Statement stmt = conn.createStatement();
+                 ResultSet rs = stmt.executeQuery("SELECT driverId, userId, fullName, licenseNumber, vehiclePlate, vehicleType, capacity, homeLocationId, availabilityStatus, isWheelchairAccessible, contactPhone, rating FROM drivers ORDER BY driverId ASC")) {
+                
+                boolean first = true;
+                while (rs.next()) {
+                    if (!first) sb.append(",");
+                    sb.append("{")
+                      .append("\"driverId\":").append(rs.getInt("driverId")).append(",")
+                      .append("\"userId\":").append(rs.getInt("userId")).append(",")
+                      .append("\"fullName\":\"").append(escapeJson(rs.getString("fullName"))).append("\",")
+                      .append("\"licenseNumber\":\"").append(escapeJson(rs.getString("licenseNumber"))).append("\",")
+                      .append("\"vehiclePlate\":\"").append(escapeJson(rs.getString("vehiclePlate"))).append("\",")
+                      .append("\"vehicleType\":\"").append(escapeJson(rs.getString("vehicleType"))).append("\",")
+                      .append("\"capacity\":").append(rs.getInt("capacity")).append(",")
+                      .append("\"locationId\":").append(rs.getInt("homeLocationId")).append(",")
+                      .append("\"availabilityStatus\":\"").append(escapeJson(rs.getString("availabilityStatus"))).append("\",")
+                      .append("\"isWheelchairAccessible\":").append(rs.getInt("isWheelchairAccessible") == 1).append(",")
+                      .append("\"contactPhone\":\"").append(escapeJson(rs.getString("contactPhone"))).append("\",")
+                      .append("\"rating\":").append(rs.getDouble("rating"))
                       .append("}");
                     first = false;
                 }
