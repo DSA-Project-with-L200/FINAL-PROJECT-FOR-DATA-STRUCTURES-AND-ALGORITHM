@@ -273,7 +273,7 @@ public class CampusDispatchApp {
         System.out.print("Enter Requester Name: ");
         String name = scanner.nextLine();
         
-        System.out.print("Enter Category (Tier 1A/1B/2/3): ");
+        System.out.print("Enter Category (EMERGENCY/DISABLED/STUDENT/STAFF/GUEST): ");
         String category = scanner.nextLine();
         
         System.out.print("Enter Pickup Location ID: ");

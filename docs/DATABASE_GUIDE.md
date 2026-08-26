@@ -50,7 +50,7 @@ Stores 300 dispatch requests from students and staff.
 | requestId | INTEGER (PK) | Unique request ID |
 | requesterName | TEXT | Name of the person requesting |
 | requesterIndexNumber | INTEGER | Student/staff index number |
-| userCategory | TEXT | EMERGENCY, DISABLED, STUDENT, or STAFF |
+| userCategory | TEXT | EMERGENCY, DISABLED, STUDENT, STAFF, or GUEST |
 | pickupLocationId | INTEGER (FK) | Where to pick up |
 | destinationLocationId | INTEGER (FK) | Where to go |
 | status | TEXT | PENDING, DISPATCHED, COMPLETED, or CANCELLED |
