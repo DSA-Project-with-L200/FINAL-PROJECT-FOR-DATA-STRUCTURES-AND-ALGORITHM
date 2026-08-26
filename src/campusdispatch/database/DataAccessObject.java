@@ -73,12 +73,12 @@ public class DataAccessObject {
                 list.add(new ServiceRequest(
                     rs.getInt("requestId"),
                     rs.getString("requesterName"),
-                    rs.getInt("requesterIndexNumber"),
+                    rs.getInt("userId"),
                     rs.getString("userCategory"),
                     rs.getInt("pickupLocationId"),
                     rs.getInt("destinationLocationId"),
                     rs.getString("status"),
-                    rs.getLong("submissionTimestamp"),
+                    System.currentTimeMillis(),
                     rs.getDouble("waitTimeMinutes"),
                     rs.getInt("isMedicalUrgency") == 1
                 ));
@@ -113,19 +113,18 @@ public class DataAccessObject {
     }
 
     public void insertRequest(ServiceRequest request) {
-        String sql = "INSERT INTO service_requests (requestId, requesterName, requesterIndexNumber, userCategory, pickupLocationId, destinationLocationId, status, submissionTimestamp, waitTimeMinutes, isMedicalUrgency) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO service_requests (requestId, userId, requesterName, userCategory, pickupLocationId, destinationLocationId, status, waitTimeMinutes, isMedicalUrgency) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DatabaseManager.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, request.getRequestId());
-            pstmt.setString(2, request.getRequesterName());
-            pstmt.setInt(3, request.getRequesterIndexNumber());
+            pstmt.setInt(2, request.getRequesterIndexNumber());
+            pstmt.setString(3, request.getRequesterName());
             pstmt.setString(4, request.getUserCategory());
             pstmt.setInt(5, request.getPickupLocationId());
             pstmt.setInt(6, request.getDestinationLocationId());
             pstmt.setString(7, request.getStatus());
-            pstmt.setLong(8, request.getSubmissionTimestamp());
-            pstmt.setDouble(9, request.getWaitTimeMinutes());
-            pstmt.setInt(10, request.isMedicalUrgency() ? 1 : 0);
+            pstmt.setDouble(8, request.getWaitTimeMinutes());
+            pstmt.setInt(9, request.isMedicalUrgency() ? 1 : 0);
             pstmt.executeUpdate();
         } catch (SQLException e) {
             System.err.println("Error inserting request: " + e.getMessage());
@@ -183,12 +182,12 @@ public class DataAccessObject {
                     return new ServiceRequest(
                         rs.getInt("requestId"),
                         rs.getString("requesterName"),
-                        rs.getInt("requesterIndexNumber"),
+                        rs.getInt("userId"),
                         rs.getString("userCategory"),
                         rs.getInt("pickupLocationId"),
                         rs.getInt("destinationLocationId"),
                         rs.getString("status"),
-                        rs.getLong("submissionTimestamp"),
+                        System.currentTimeMillis(),
                         rs.getDouble("waitTimeMinutes"),
                         rs.getInt("isMedicalUrgency") == 1
                     );
