@@ -111,7 +111,7 @@ export default function CampusMap({ onLog, activeSimulationRequest }) {
     polylinesRef.current = [];
 
     // Draw 100 Road Network Polylines
-    RAW_ROADS.forEach(([id, u, v]) => {
+    RAW_ROADS.forEach(([, u, v]) => {
       const srcLoc = CAMPUS_LOCATIONS.find((l) => l.id === u);
       const destLoc = CAMPUS_LOCATIONS.find((l) => l.id === v);
       if (!srcLoc || !destLoc) return;
@@ -264,7 +264,7 @@ export default function CampusMap({ onLog, activeSimulationRequest }) {
     const scaleX = canvas.width / 800;
     const scaleY = canvas.height / 500;
 
-    RAW_ROADS.forEach(([id, u, v]) => {
+    RAW_ROADS.forEach(([, u, v]) => {
       const src = CAMPUS_LOCATIONS.find((l) => l.id === u);
       const dest = CAMPUS_LOCATIONS.find((l) => l.id === v);
       if (!src || !dest) return;
